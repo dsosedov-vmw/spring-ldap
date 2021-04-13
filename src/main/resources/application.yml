@@ -1,1 +1,9 @@
+spring:
+  ldap:
+    embedded:
+      ldif: classpath:ldap-server.ldif
+      base-dn: dc=dsosedov,dc=com
+      port: 8389
 
+ldap:
+  url: ldap://localhost:8389/dc=dsosedov,dc=com
