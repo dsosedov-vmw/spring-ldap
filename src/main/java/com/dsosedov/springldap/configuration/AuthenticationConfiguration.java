@@ -35,6 +35,7 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/api/v1/authenticate").permitAll()
 //                .anyRequest().authenticated()
                 .antMatchers("/api/v1/foo").authenticated()
+                .antMatchers("/api/v1/bar/**").authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
