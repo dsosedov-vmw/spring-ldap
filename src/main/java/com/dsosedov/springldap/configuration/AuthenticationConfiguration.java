@@ -1,7 +1,6 @@
 package com.dsosedov.springldap.configuration;
 
 import com.dsosedov.springldap.components.JwtRequestFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,8 +20,11 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
     @Value("${ldap.url}")
     private String ldapUrl;
 
-    @Autowired
     private JwtRequestFilter jwtRequestFilter;
+
+    public AuthenticationConfiguration(JwtRequestFilter jwtRequestFilter) {
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -30,8 +32,9 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/authenticate").permitAll()
-                .anyRequest().authenticated()
+//                .antMatchers("/api/v1/authenticate").permitAll()
+//                .anyRequest().authenticated()
+                .antMatchers("/api/v1/foo").authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
