@@ -30,13 +30,21 @@ public class AuthenticationControllerTests {
     }
 
     @Test
-    void authenticatePasses() throws Exception {
+    void authenticatePassesAsJohn() throws Exception {
         mockMvc.perform(
                 post("/api/v1/authenticate")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"ben\",\"password\":\"benspassword\"}"))
+                        .content("{\"username\":\"johnd\",\"password\":\"johnd1\"}"))
                 .andExpect(status().isOk());
-                //.andExpect(content().json("{\"jwt\":\"goodjwt\"}"));
+    }
+
+    @Test
+    void authenticatePassesAsJane() throws Exception {
+        mockMvc.perform(
+                post("/api/v1/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"janed\",\"password\":\"janed1\"}"))
+                .andExpect(status().isOk());
     }
 
 }

@@ -32,11 +32,9 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-//                .antMatchers("/api/v1/authenticate").permitAll()
-//                .anyRequest().authenticated()
                 .antMatchers("/api/v1/foo").authenticated()
                 .antMatchers("/api/v1/bar/**").authenticated()
-                .antMatchers("/api/v1/bar/**").hasRole("manager")
+                .antMatchers("/api/v1/bar/**").hasRole("admin")
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

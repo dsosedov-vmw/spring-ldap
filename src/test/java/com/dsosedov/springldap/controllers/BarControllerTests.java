@@ -37,13 +37,29 @@ public class BarControllerTests {
     }
 
     @Test
-    void getEvenSuccessfully() throws Exception {
+    void getBarsUnauthorizedAsJohn() throws Exception {
         when(barService.bar(0)).thenReturn(true);
         ObjectMapper mapper = new ObjectMapper();
         AuthenticationResponse response = mapper.readValue(mockMvc.perform(
                 post("/api/v1/authenticate")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"ben\",\"password\":\"benspassword\"}"))
+                        .content("{\"username\":\"johnd\",\"password\":\"johnd1\"}"))
+                .andReturn()
+                .getResponse().getContentAsString(), AuthenticationResponse.class);
+        mockMvc.perform(
+                get("/api/v1/bar/0")
+                        .header("Authorization", "Bearer " + response.getJwt()))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void getEvenSuccessfullyAsJane() throws Exception {
+        when(barService.bar(0)).thenReturn(true);
+        ObjectMapper mapper = new ObjectMapper();
+        AuthenticationResponse response = mapper.readValue(mockMvc.perform(
+                post("/api/v1/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"janed\",\"password\":\"janed1\"}"))
                 .andReturn()
                 .getResponse().getContentAsString(), AuthenticationResponse.class);
         mockMvc.perform(
@@ -54,13 +70,13 @@ public class BarControllerTests {
     }
 
     @Test
-    void getOddSuccessfully() throws Exception {
+    void getOddSuccessfullyAsJane() throws Exception {
         when(barService.bar(0)).thenReturn(false);
         ObjectMapper mapper = new ObjectMapper();
         AuthenticationResponse response = mapper.readValue(mockMvc.perform(
                 post("/api/v1/authenticate")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"ben\",\"password\":\"benspassword\"}"))
+                        .content("{\"username\":\"janed\",\"password\":\"janed1\"}"))
                 .andReturn()
                 .getResponse().getContentAsString(), AuthenticationResponse.class);
         mockMvc.perform(

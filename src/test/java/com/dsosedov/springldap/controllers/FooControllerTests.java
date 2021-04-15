@@ -31,12 +31,28 @@ public class FooControllerTests {
     }
 
     @Test
-    void getFoosSuccessfully() throws Exception {
+    void getFoosSuccessfullyAsJohn() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         AuthenticationResponse response = mapper.readValue(mockMvc.perform(
                 post("/api/v1/authenticate")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\":\"ben\",\"password\":\"benspassword\"}"))
+                        .content("{\"username\":\"johnd\",\"password\":\"johnd1\"}"))
+                .andReturn()
+                .getResponse().getContentAsString(), AuthenticationResponse.class);
+        mockMvc.perform(
+                get("/api/v1/foo")
+                        .header("Authorization", "Bearer " + response.getJwt()))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[\"foo\",\"bar\",\"baz\"]"));
+    }
+
+    @Test
+    void getFoosSuccessfullyAsJane() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        AuthenticationResponse response = mapper.readValue(mockMvc.perform(
+                post("/api/v1/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"janed\",\"password\":\"janed1\"}"))
                 .andReturn()
                 .getResponse().getContentAsString(), AuthenticationResponse.class);
         mockMvc.perform(
