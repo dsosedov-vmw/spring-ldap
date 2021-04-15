@@ -1,6 +1,7 @@
 package com.dsosedov.springldap.controllers;
 
 import com.dsosedov.springldap.services.BarService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ public class BarController {
         this.barService = barService;
     }
 
+    @Operation(description = "Returns if the value is even or odd")
     @GetMapping("/{val}")
     public String get(@PathVariable Integer val) {
         Boolean isEven = barService.bar(val);

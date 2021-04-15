@@ -2,6 +2,7 @@ package com.dsosedov.springldap.controllers;
 
 import com.dsosedov.springldap.models.AuthenticationRequest;
 import com.dsosedov.springldap.models.AuthenticationResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,6 +23,7 @@ public class AuthenticationController {
         this.authenticationManager = authenticationManager;
     }
 
+    @Operation(description = "Authenticates users with a username and a password and returns a JWT token")
     @PostMapping
     public AuthenticationResponse post(@RequestBody AuthenticationRequest request) {
         try {
