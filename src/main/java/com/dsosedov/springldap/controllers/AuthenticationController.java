@@ -1,5 +1,6 @@
 package com.dsosedov.springldap.controllers;
 
+import com.dsosedov.springldap.components.JwtUtil;
 import com.dsosedov.springldap.models.AuthenticationRequest;
 import com.dsosedov.springldap.models.AuthenticationResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,7 +36,7 @@ public class AuthenticationController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect username or password");
         }
 
-        String jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";//jwtUtil.generateToken(userDetails);
+        String jwt = JwtUtil.encode(request.getUsername());
         return new AuthenticationResponse(jwt);
     }
 
