@@ -29,6 +29,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Value("${ldap.url}")
     private String ldapUrl;
 
+    @Value("${spring.ldap.embedded.base-dn}")
+    private String baseDn;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
@@ -69,7 +72,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             ctls.setReturningAttributes(attrIDs);
             ctls.setSearchScope(SearchControls.ONELEVEL_SCOPE);
 
-            NamingEnumeration searchResult = ctx.search("ou=groups", "(uniqueMember=uid="+username+",ou=people,dc=dsosedov,dc=com)", ctls);
+            NamingEnumeration searchResult = ctx.search("ou=groups", "(uniqueMember=uid="+username+",ou=people,"+baseDn+")", ctls);
             while (searchResult.hasMore()) {
                 SearchResult rslt = (SearchResult) searchResult.next();
                 Attributes attrs = rslt.getAttributes();
