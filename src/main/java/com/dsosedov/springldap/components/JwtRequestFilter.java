@@ -1,20 +1,33 @@
 package com.dsosedov.springldap.components;
 
+import io.jsonwebtoken.Claims;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.*;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
 
 @Component
-public class JwtRequestFilter  extends OncePerRequestFilter {
+public class JwtRequestFilter extends OncePerRequestFilter {
+
+    @Value("${ldap.url}")
+    private String ldapUrl;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -22,20 +35,52 @@ public class JwtRequestFilter  extends OncePerRequestFilter {
         final String authorizationHeader = request.getHeader("Authorization");
 
         String username = null;
-        String jwt = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
-            username = "ben"; //jwtUtil.extractUsername(jwt);
+            String jwt = authorizationHeader.substring(7);
+            Claims claims = JwtUtil.decode(jwt);
+            username = claims.getSubject();
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            List<String> groups = getUserGroups(username);
+            List<GrantedAuthority> authorities = new ArrayList<>();
+            for (int i = 0; i < groups.size(); i++) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_"+groups.get(i)));
+            }
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                    new Object(), null, Collections.emptyList()
+                    new Object(), null, authorities
             );
             usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         }
         chain.doFilter(request, response);
+    }
+
+    public ArrayList<String> getUserGroups(String username) {
+        ArrayList<String> list = new ArrayList<>();
+        Hashtable env = new Hashtable();
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.PROVIDER_URL, ldapUrl);
+        try {
+            DirContext ctx = new InitialDirContext(env);
+            SearchControls ctls = new SearchControls();
+            String[] attrIDs = {"ou"};
+            ctls.setReturningAttributes(attrIDs);
+            ctls.setSearchScope(SearchControls.ONELEVEL_SCOPE);
+
+            NamingEnumeration searchResult = ctx.search("ou=groups", "(uniqueMember=uid="+username+",ou=people,dc=dsosedov,dc=com)", ctls);
+            while (searchResult.hasMore()) {
+                SearchResult rslt = (SearchResult) searchResult.next();
+                Attributes attrs = rslt.getAttributes();
+                String groups = attrs.get("ou").toString();
+                String[] groupname = groups.split(": ");
+                list.add(groupname[1]);
+            }
+            ctx.close();
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

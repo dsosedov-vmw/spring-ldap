@@ -36,6 +36,7 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
 //                .anyRequest().authenticated()
                 .antMatchers("/api/v1/foo").authenticated()
                 .antMatchers("/api/v1/bar/**").authenticated()
+                .antMatchers("/api/v1/bar/**").hasRole("manager")
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
