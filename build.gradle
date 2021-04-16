@@ -26,6 +26,7 @@ dependencies {
 	implementation 'com.unboundid:unboundid-ldapsdk'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.5.7'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

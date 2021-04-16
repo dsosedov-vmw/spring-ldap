@@ -34,7 +34,7 @@ sn: Doe
 uid: janed
 userPassword: $2a$10$gxh7AGUvcr5Lap0QtbzD8OWuoafBfKCjfGA0GLZ3R.zWisna7yj3C
 
-dn: cn=developers,ou=groups,dc=dsosedov,dc=com
+dn: cn=users,ou=groups,dc=dsosedov,dc=com
 objectclass: top
 objectclass: groupOfUniqueNames
 cn: users
@@ -42,7 +42,7 @@ ou: user
 uniqueMember: uid=johnd,ou=people,dc=dsosedov,dc=com
 uniqueMember: uid=janed,ou=people,dc=dsosedov,dc=com
 
-dn: cn=managers,ou=groups,dc=dsosedov,dc=com
+dn: cn=admins,ou=groups,dc=dsosedov,dc=com
 objectclass: top
 objectclass: groupOfUniqueNames
 cn: admins

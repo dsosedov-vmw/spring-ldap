@@ -60,6 +60,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
+    // TODO: re-write this using ldapsdk
     public ArrayList<String> getUserGroups(String username) {
         ArrayList<String> list = new ArrayList<>();
         Hashtable env = new Hashtable();
