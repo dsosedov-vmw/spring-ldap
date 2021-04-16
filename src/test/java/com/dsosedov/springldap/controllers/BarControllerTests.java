@@ -17,10 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = {
-        "spring.ldap.embedded.port=8393",
-        "ldap.url=ldap://localhost:8393/dc=dsosedov,dc=com"
-})
+@SpringBootTest(properties = {"spring.ldap.embedded.port=8393"})
 @AutoConfigureMockMvc
 public class BarControllerTests {
 

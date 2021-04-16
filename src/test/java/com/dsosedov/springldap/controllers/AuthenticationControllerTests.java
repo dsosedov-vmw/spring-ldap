@@ -10,10 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = {
-        "spring.ldap.embedded.port=8391",
-        "ldap.url=ldap://localhost:8391/dc=dsosedov,dc=com"
-})
+@SpringBootTest(properties = {"spring.ldap.embedded.port=8391"})
 @AutoConfigureMockMvc
 public class AuthenticationControllerTests {
 

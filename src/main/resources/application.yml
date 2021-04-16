@@ -6,4 +6,4 @@ spring:
       port: 8389
 
 ldap:
-  url: ldap://localhost:8389/dc=dsosedov,dc=com
+  url: ldap://localhost:${spring.ldap.embedded.port}/${spring.ldap.embedded.base-dn}
