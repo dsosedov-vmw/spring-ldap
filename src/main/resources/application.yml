@@ -1,8 +1,12 @@
 spring:
+  datasource:
+    password: postgres
+    url: jdbc:postgresql://127.0.0.1:5432/spring_ldap_db
+    username: postgres
   ldap:
     embedded:
-      ldif: classpath:ldap-server.ldif
       base-dn: dc=dsosedov,dc=com
+      ldif: classpath:ldap-server.ldif
       port: 8389
 
 ldap:
