@@ -32,7 +32,7 @@ public class JwtUtil {
                 .setIssuer("spring-ldap")
                 .signWith(signatureAlgorithm, signingKey);
 
-        long ttlMillis = 800000;
+        long ttlMillis = 1000 * 60 * 60 * 24 * 7; // 1 week
 
         if (ttlMillis >= 0) {
             long expMillis = nowMillis + ttlMillis;

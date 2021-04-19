@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class FooServiceTests {
@@ -34,5 +35,11 @@ public class FooServiceTests {
     @Test
     void fooShouldReturnArray() {
         assertArrayEquals(new String[]{"d", "e", "f"}, fooService.foo());
+    }
+
+    @Test
+    void addShouldSave() {
+        fooService.add("foo");
+        verify(fooRepository).save(new Foo("foo"));
     }
 }
