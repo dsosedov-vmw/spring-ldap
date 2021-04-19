@@ -1,14 +1,18 @@
 package com.dsosedov.springldap.controllers;
 
 import com.dsosedov.springldap.models.AuthenticationResponse;
+import com.dsosedov.springldap.services.FooService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -20,6 +24,14 @@ public class FooControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private FooService fooService;
+
+    @BeforeEach
+    void setUp() {
+        when(fooService.foo()).thenReturn(new String[]{"a", "b", "c"});
+    }
 
     @Test
     void getFoosUnauthorized() throws Exception {
@@ -40,7 +52,7 @@ public class FooControllerTests {
                 get("/api/v1/foo")
                         .header("Authorization", "Bearer " + response.getJwt()))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[\"foo\",\"bar\",\"baz\"]"));
+                .andExpect(content().json("[\"a\",\"b\",\"c\"]"));
     }
 
     @Test
@@ -56,7 +68,7 @@ public class FooControllerTests {
                 get("/api/v1/foo")
                         .header("Authorization", "Bearer " + response.getJwt()))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[\"foo\",\"bar\",\"baz\"]"));
+                .andExpect(content().json("[\"a\",\"b\",\"c\"]"));
     }
 
 }
