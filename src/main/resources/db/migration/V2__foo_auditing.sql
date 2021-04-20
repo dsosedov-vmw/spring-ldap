@@ -1,0 +1,5 @@
+ALTER TABLE foo
+    ADD COLUMN created TIMESTAMP NULL,
+    ADD COLUMN created_by VARCHAR(32) NULL,
+    ADD COLUMN modified TIMESTAMP NULL,
+    ADD COLUMN modified_by VARCHAR(32) NULL;
