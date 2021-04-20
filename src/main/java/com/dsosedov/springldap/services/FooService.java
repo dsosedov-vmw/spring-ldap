@@ -26,4 +26,8 @@ public class FooService {
         return fooVals.toArray(result);
     }
 
+    public void add(String val) {
+        fooRepository.save(new Foo(val));
+    }
+
 }

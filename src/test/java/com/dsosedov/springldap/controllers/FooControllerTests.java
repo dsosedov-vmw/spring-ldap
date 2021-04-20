@@ -40,6 +40,42 @@ public class FooControllerTests {
     }
 
     @Test
+    void postFoosSuccessfullyAsJohn() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        AuthenticationResponse response = mapper.readValue(mockMvc.perform(
+                post("/api/v1/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"johnd\",\"password\":\"johnd1\"}"))
+                .andReturn()
+                .getResponse().getContentAsString(), AuthenticationResponse.class);
+        mockMvc.perform(
+                post("/api/v1/foo")
+                        .header("Authorization", "Bearer " + response.getJwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"val\":\"quz\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(""));
+    }
+
+    @Test
+    void postFoosSuccessfullyAsJane() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        AuthenticationResponse response = mapper.readValue(mockMvc.perform(
+                post("/api/v1/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"janed\",\"password\":\"janed1\"}"))
+                .andReturn()
+                .getResponse().getContentAsString(), AuthenticationResponse.class);
+        mockMvc.perform(
+                post("/api/v1/foo")
+                        .header("Authorization", "Bearer " + response.getJwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"val\":\"quz\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(""));
+    }
+
+    @Test
     void getFoosSuccessfullyAsJohn() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         AuthenticationResponse response = mapper.readValue(mockMvc.perform(
