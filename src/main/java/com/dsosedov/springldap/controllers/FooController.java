@@ -31,6 +31,19 @@ public class FooController {
         fooService.add(request.getVal());
     }
 
+    @Operation(description = "Updates description")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204"),
+            @ApiResponse(responseCode = "400"),
+            @ApiResponse(responseCode = "403"),
+            @ApiResponse(responseCode = "500")
+    })
+    @PutMapping
+    public void put(@RequestBody FooRequest request) {
+
+    }
+
     @Operation(description = "Returns an array of strings")
     @ResponseStatus(code = HttpStatus.OK)
     @ApiResponses(value = {

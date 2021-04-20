@@ -26,6 +26,8 @@ public class Foo {
     @Id
     private String val;
 
+    private String description;
+
     @CreatedDate
     private Date created;
 

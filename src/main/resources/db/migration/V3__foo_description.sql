@@ -1,0 +1,2 @@
+ALTER TABLE foo
+    ADD COLUMN description VARCHAR(250) NULL;
