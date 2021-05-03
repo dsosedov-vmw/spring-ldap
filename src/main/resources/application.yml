@@ -10,6 +10,8 @@ spring:
       base-dn: dc=dsosedov,dc=com
       ldif: classpath:ldap-server.ldif
       port: 8389
+      validation:
+        schema: classpath:ldap-extended-schema.ldif
 
 ldap:
   url: ldap://localhost:${spring.ldap.embedded.port}/${spring.ldap.embedded.base-dn}
