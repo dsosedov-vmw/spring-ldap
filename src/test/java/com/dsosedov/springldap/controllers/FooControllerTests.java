@@ -13,8 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,7 +39,7 @@ public class FooControllerTests {
     }
 
     @Test
-    void postFoosSuccessfullyAsJohn() throws Exception {
+    void postFoosUnauthorizedAsJohn() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         AuthenticationResponse response = mapper.readValue(mockMvc.perform(
                 post("/api/v1/authenticate")
@@ -53,8 +52,7 @@ public class FooControllerTests {
                         .header("Authorization", "Bearer " + response.getJwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"val\":\"quz\"}"))
-                .andExpect(status().isCreated())
-                .andExpect(content().string(""));
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -105,6 +103,59 @@ public class FooControllerTests {
                         .header("Authorization", "Bearer " + response.getJwt()))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[\"a\",\"b\",\"c\"]"));
+    }
+
+    @Test
+    void putFoosSuccessfullyAsJohn() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        AuthenticationResponse response = mapper.readValue(mockMvc.perform(
+                post("/api/v1/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"johnd\",\"password\":\"johnd1\"}"))
+                .andReturn()
+                .getResponse().getContentAsString(), AuthenticationResponse.class);
+        mockMvc.perform(
+                put("/api/v1/foo/quz")
+                        .header("Authorization", "Bearer " + response.getJwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"val\":\"quuz\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("quz changed to quuz"));
+    }
+
+    @Test
+    void putFoosSuccessfullyAsJane() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        AuthenticationResponse response = mapper.readValue(mockMvc.perform(
+                post("/api/v1/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"janed\",\"password\":\"janed1\"}"))
+                .andReturn()
+                .getResponse().getContentAsString(), AuthenticationResponse.class);
+        mockMvc.perform(
+                put("/api/v1/foo/quz")
+                        .header("Authorization", "Bearer " + response.getJwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"val\":\"quuz\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("quz changed to quuz"));
+    }
+
+    @Test
+    void putFoosUnauthorizedAsNorolejoe() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        AuthenticationResponse response = mapper.readValue(mockMvc.perform(
+                post("/api/v1/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"norolejoe\",\"password\":\"norolejoe1\"}"))
+                .andReturn()
+                .getResponse().getContentAsString(), AuthenticationResponse.class);
+        mockMvc.perform(
+                put("/api/v1/foo/quz")
+                        .header("Authorization", "Bearer " + response.getJwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"val\":\"quuz\"}"))
+                .andExpect(status().isForbidden());
     }
 
 }

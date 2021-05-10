@@ -4,6 +4,7 @@ import com.dsosedov.springldap.components.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,9 +33,11 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/foo").authenticated()
-                .antMatchers("/api/v1/bar/**").authenticated()
+                .antMatchers("/api/v1/authenticate").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/foo").hasRole("admin")
+                .antMatchers(HttpMethod.PUT, "/api/v1/foo/**").hasAnyRole("admin", "user")
                 .antMatchers("/api/v1/bar/**").hasRole("admin")
+                .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

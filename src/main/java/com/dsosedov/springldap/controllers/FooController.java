@@ -2,10 +2,12 @@ package com.dsosedov.springldap.controllers;
 
 import com.dsosedov.springldap.models.FooRequest;
 import com.dsosedov.springldap.services.FooService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -41,6 +43,19 @@ public class FooController {
     @GetMapping
     public String[] get() {
         return fooService.foo();
+    }
+
+    @Operation(description = "Creates a string")
+    @ResponseStatus(code = HttpStatus.OK)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201"),
+            @ApiResponse(responseCode = "400"),
+            @ApiResponse(responseCode = "403"),
+            @ApiResponse(responseCode = "500")
+    })
+    @PutMapping("/{val}")
+    public String put(@PathVariable String val, @RequestBody FooRequest request) {
+        return val + " changed to " + request.getVal();
     }
 
 }
