@@ -142,6 +142,59 @@ public class FooControllerTests {
     }
 
     @Test
+    void putEmptyFoosUnauthorizedAsNorolejoe() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        AuthenticationResponse response = mapper.readValue(mockMvc.perform(
+                post("/api/v1/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"norolejoe\",\"password\":\"norolejoe1\"}"))
+                .andReturn()
+                .getResponse().getContentAsString(), AuthenticationResponse.class);
+        mockMvc.perform(
+                put("/api/v1/foo")
+                        .header("Authorization", "Bearer " + response.getJwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"val\":\"quuz\"}"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void putEmptyFoosSuccessfullyAsJohn() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        AuthenticationResponse response = mapper.readValue(mockMvc.perform(
+                post("/api/v1/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"johnd\",\"password\":\"johnd1\"}"))
+                .andReturn()
+                .getResponse().getContentAsString(), AuthenticationResponse.class);
+        mockMvc.perform(
+                put("/api/v1/foo")
+                        .header("Authorization", "Bearer " + response.getJwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"val\":\"quuz\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("nothing changed to quuz"));
+    }
+
+    @Test
+    void putEmptyFoosSuccessfullyAsJane() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        AuthenticationResponse response = mapper.readValue(mockMvc.perform(
+                post("/api/v1/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"janed\",\"password\":\"janed1\"}"))
+                .andReturn()
+                .getResponse().getContentAsString(), AuthenticationResponse.class);
+        mockMvc.perform(
+                put("/api/v1/foo")
+                        .header("Authorization", "Bearer " + response.getJwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"val\":\"quuz\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("nothing changed to quuz"));
+    }
+
+    @Test
     void putFoosUnauthorizedAsNorolejoe() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         AuthenticationResponse response = mapper.readValue(mockMvc.perform(

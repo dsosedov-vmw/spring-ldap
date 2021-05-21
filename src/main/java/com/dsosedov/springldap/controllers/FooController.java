@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/v1/foo")
@@ -53,9 +55,11 @@ public class FooController {
             @ApiResponse(responseCode = "403"),
             @ApiResponse(responseCode = "500")
     })
-    @PutMapping("/{val}")
-    public String put(@PathVariable String val, @RequestBody FooRequest request) {
-        return val + " changed to " + request.getVal();
+    @PutMapping(value = { "/", "/{val}" })
+    public String put(@PathVariable Optional<String> val, @RequestBody FooRequest request) {
+        if (val.isEmpty())
+            val = Optional.of("nothing");
+        return val.get() + " changed to " + request.getVal();
     }
 
 }
