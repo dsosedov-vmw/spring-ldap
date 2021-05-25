@@ -2,7 +2,6 @@ package com.dsosedov.springldap.controllers;
 
 import com.dsosedov.springldap.models.BazRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
