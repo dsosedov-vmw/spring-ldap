@@ -20,7 +20,7 @@ public class OpenApiConfiguration {
         securityScheme.setName("KeyCloak");
         securityScheme.setType(SecurityScheme.Type.OPENIDCONNECT);
 
-        components.addSecuritySchemes("oauth2", securityScheme);
+        components.addSecuritySchemes("KeyCloak", securityScheme);
 
         return new OpenAPI()
                 .components(components)
@@ -29,20 +29,5 @@ public class OpenApiConfiguration {
                         .description("A sample LDAP consuming application.")
                         .version("v1"));
     }
-
-//    @Bean
-//    public CorsFilter corsFilter() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//
-//        // Allow anyone and anything access. Probably ok for Swagger spec
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.setAllowCredentials(true);
-//        config.addAllowedOrigin("*");
-//        config.addAllowedHeader("*");
-//        config.addAllowedMethod("*");
-//
-//        source.registerCorsConfiguration("/swagger-ui/index.html", config);
-//        return new CorsFilter(source);
-//    }
 
 }

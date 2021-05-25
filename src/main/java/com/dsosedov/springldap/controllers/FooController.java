@@ -5,6 +5,7 @@ import com.dsosedov.springldap.services.FooService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +33,7 @@ public class FooController {
         fooService.add(request.getVal());
     }
 
-    //@Operation(description = "Returns an array of strings", security = @SecurityRequirement(name = "OpenApiSecurityScheme"))
+    @Operation(description = "Returns an array of strings", security = @SecurityRequirement(name = "KeyCloak"))
     @ResponseStatus(code = HttpStatus.OK)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200"),
