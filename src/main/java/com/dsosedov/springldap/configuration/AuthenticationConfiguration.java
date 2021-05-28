@@ -33,7 +33,7 @@ public class AuthenticationConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/authenticate", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .antMatchers("/api/v1/authenticate", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api/v1/redis/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/foo").hasRole("admin")
                 .antMatchers(HttpMethod.PUT, "/api/v1/foo/**").hasAnyRole("admin", "user")
                 .antMatchers("/api/v1/bar/**").hasRole("admin")
